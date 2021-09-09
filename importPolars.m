@@ -4,20 +4,20 @@ function dataLib = importPolars(filename,version)
 %Last Revised on 09.09.21
 
 %%%% Explanation
+%This function will take in the name of a polar file on .txt form as output
+%by ASHES, and outputs this in the form of a Map, readable by matlab.
+
 %the filename is the name of the ashes polar file you want to load.
 %version is the name of the version of ashes the polar file was created
 %with. The two valid options here are '16' and '17' for ashes version 3.16
 %and 3.17. If no version is specified, the function will try to deduce the
 %version on its own.
 
-%This function will take in the name of a polar file on .txt form as output
-%by ASHES, and outputs this in the form of a Map, readable by matlab.
-
 %A map is a data structure which uses keywords to find related data. In
 %this case the keywords will correspond to the Reynolds number of the polar
 %data.
 
-%For a demo of what this function does, please run the file
+%For a demo of what this function does, please read through and run the file
 %"ImportPolarsDemo.m".
 %% Reading in the file and guessing a version if nothing is specified by the operator
 [standardName,standardVersion]=standardizeFile(filename);

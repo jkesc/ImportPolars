@@ -2,11 +2,16 @@
 
 %% This is a demonstration of how the importPolars function can be used.
 
-% dataLib=importPolars('<polarFile.txt>'); %Imports the data from your file. 
+dataLib=importPolars('<polarFile.txt>'); %Imports the data from your file. 
 %REMEMBER TO CHANGE THIS NAME TO A FILE WHICH IS ACTUALLY A POLAR FILE IN YOUR DIRECTORY
-dataLib=importPolars(uigetfile('*.txt'));
+
+%If you prefer to choose the polar files from an explorer, you can
+%comment out the first dataLib-line, and instead uncomment the following
+%one.
+%dataLib=importPolars(uigetfile('*.txt'));
 
 keys= dataLib.keys; %keys now contains the Reynolds numbers from the file
+
 %the individual keys can be extracted by using indexing in curly braces:
 firstKey=keys{1};
 fprintf('\nThis is the value of firstKey: %s\n',firstKey)

@@ -7,18 +7,25 @@ function dataLib = importPolars(filename,version)
 %This function will take in the name of a polar file on .txt form as output
 %by ASHES, and outputs this in the form of a Map, readable by matlab.
 
-%the filename is the name of the ashes polar file you want to load.
-%version is the name of the version of ashes the polar file was created
-%with. The two valid options here are '16' and '17' for ashes version 3.16
-%and 3.17. If no version is specified, the function will try to deduce the
-%version on its own.
-
 %A map is a data structure which uses keywords to find related data. In
 %this case the keywords will correspond to the Reynolds number of the polar
 %data.
 
+%the filename is the name of the ashes polar file you want to load.
+%version is the name of the version of ashes the polar file was created
+%with. The two valid options here are '16', '17' and 'airfoiltools' for
+%ashes version 3.16,
+% 3.17. and files imported from airfoiltools.com. If no version is specified, the function will try to deduce the
+%version on its own.
+
+%If you want to import multiple polars from airfoiltools, it is advised
+%that you use the "mergeAirfoiltools.m" script. This gives you the
+%possibility to specify the name of a combined file with all the polars,
+%and then to choose the files you want to merge.
+
 %For a demo of what this function does, please read through and run the file
 %"ImportPolarsDemo.m".
+
 %% Reading in the file and guessing a version if nothing is specified by the operator
 [standardName,standardVersion]=standardizeFile(filename);
 
@@ -74,6 +81,37 @@ switch version
             fclose('all');
             error('There was an error in importPolars.m, in case 17')
         end
+    case 'airfoiltools'
+        fid=fopen(standardName,'r');
+        line=fgetl(fid);
+        for i=1:1:12
+            line=fgetl(fid);
+            if i==8
+                tokens=split(line);
+                Re=tokens{7};
+            end
+        end
+        elements=[];
+        
+        while ischar(line)
+            if line==""
+                dataLib(strcat(num2str(Re),'e+06'))=elements;
+                elements=[];
+                for i=1:1:11
+                    line=fgetl(fid);
+                    if i==8
+                        tokens=split(line);
+                        Re=tokens{7};
+                    end
+                end
+            else
+                tokens=split(line);
+                elements=[elements;str2double(tokens{2}) str2double(tokens{3}) str2double(tokens{4}) str2double(tokens{6})];
+            end
+            line=fgetl(fid);
+        end
+        dataLib(strcat(num2str(Re),'e+06'))=elements;
+        fclose(fid);
 end
 end
 
@@ -98,6 +136,8 @@ try
             version = "17";
         case "------------"
             version="16";
+        case ""
+            version="airfoiltools";
         otherwise
             warning('No matching case found. version sat to 17')
             version="17";

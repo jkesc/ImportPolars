@@ -1,11 +1,4 @@
-          1   InterpOrd         ! Interpolation order to use for quasi-steady table lookup {1=linear; 3=cubic spline; "default"} [default=3]
-          1   NonDimArea        ! The non-dimensional area of the airfoil (area/chord^2) (set to 1.0 if unsure or unneeded)
-          0   NumCoords         ! The number of coordinates in the airfoil shape file.  Set to zero if coordinates not included.
-          8   NumTabs           ! Number of airfoil tables in this file.  Each table must have lines for Re and Ctrl.
      0.0010   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         94   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1634   0.0000
    -170.00    0.311   0.2030   0.4000
    -160.00    0.622   0.3170   0.0479
@@ -101,9 +94,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.311   0.2030  -0.5000
     180.00    0.000   0.1634   0.0000
      0.0050   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         94   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1541   0.0000
    -170.00    0.362   0.1939   0.4000
    -160.00    0.724   0.3084   0.0657
@@ -199,9 +189,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.362   0.1939  -0.5000
     180.00    0.000   0.1541   0.0000
      0.0100   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         94   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1409   0.0000
    -170.00    0.372   0.1809   0.4000
    -160.00    0.745   0.2959   0.0457
@@ -297,9 +284,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.372   0.1809  -0.5000
     180.00    0.000   0.1409   0.0000
      0.0500   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         92   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1278   0.0000
    -170.00    0.391   0.1680   0.4000
    -160.00    0.782   0.2836  -0.0681
@@ -393,9 +377,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.391   0.1680  -0.5000
     180.00    0.000   0.1278   0.0000
      0.1000   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         93   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1207   0.0000
    -170.00    0.400   0.1611   0.4000
    -160.00    0.799   0.2770  -0.0879
@@ -490,9 +471,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.400   0.1611  -0.5000
     180.00    0.000   0.1207   0.0000
      0.1500   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         92   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.1129   0.0000
    -170.00    0.406   0.1534   0.4000
    -160.00    0.813   0.2697  -0.1040
@@ -586,9 +564,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.406   0.1534  -0.5000
     180.00    0.000   0.1129   0.0000
      0.2000   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         90   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.0901   0.0000
    -170.00    0.421   0.1309   0.4000
    -160.00    0.843   0.2482  -0.1187
@@ -680,9 +655,6 @@ False         InclUAdata       ! Is unsteady aerodynamics data included in this 
     170.00   -0.421   0.1309  -0.5000
     180.00    0.000   0.0901   0.0000
      0.2500   Re               ! Reynolds number in millions
-          0   Ctrl             ! Control setting (must be 0 for current AirfoilInfo)
-False         InclUAdata       ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
-         92   NumAlf           ! Number of data lines in the following table
    -180.00    0.000   0.0690   0.0000
    -170.00    0.438   0.1101   0.4000
    -160.00    0.876   0.2284  -0.1322

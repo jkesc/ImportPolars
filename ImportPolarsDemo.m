@@ -2,7 +2,7 @@
 
 %% This is a demonstration of how the importPolars function can be used.
 
-dataLib=importPolars('<polarFile.txt>'); %Imports the data from your file. 
+dataLib=importPolars('S826_Ashes17.txt'); %Imports the data from your file. 
 %REMEMBER TO CHANGE THIS NAME TO A FILE WHICH IS ACTUALLY A POLAR FILE IN YOUR DIRECTORY
 
 %If you prefer to choose the polar files from an explorer, you can
@@ -32,3 +32,9 @@ FirstPolarData=dataLib(firstKey);
 
 %Play around a bit with the new variables that you see in your workspace,
 %to familiarize yourself with them.
+
+%If you want to import multiple files from airfoiltools, you first have to download
+%the files individually, and then run the function 'mergeAirfoiltools('polarName.txt')'
+%then you can run importPolars('polarName.txt') the same way as for ashes
+%files.
+

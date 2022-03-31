@@ -21,18 +21,18 @@ def importAshesPolars(filename, source):
         # header (Lines which are not commented out by an !, that is).
         ReStr = "Nan"
         skiplines = 4
-        # create a temporary file, to be able to make a csv from our data later.
-        # The temporary file is supposed to contain five column: Re, AoA, Cl, Cd
-        # and Cm. Not that Cm is never used in this course.
+        # create a temporary file, to be able to make a csv from our data later
+        # The temporary file is supposed to contain five columns: Re, AoA, Cl,
+        # Cd and Cm. Not that Cm is never used in this course.
         with open("temp.txt", "w") as tempTxt:
-    
+
             # Iterate through all lines:
             for line in bladelines:
                 # If the line is not commented out:
                 if not (line[0] == "!"):
-    
-                    # If it is the line describing the Reynolds number, we remember
-                    # the new Re value
+
+                    # If it is the line describing the Reynolds number,
+                    # we remember the new Re value
                     # and know that we have to skip the next three lines.
                     if line[14:16] == "Re":
                         ReStr = line[1:11]
@@ -40,14 +40,16 @@ def importAshesPolars(filename, source):
                     # If it's one of the three lines after Re, we skip it.
                     elif not (skiplines == 0):
                         skiplines -= 1
-                    # Else, write the lift, AoA and cm to the temporary text file.
+                    # Else, write the lift, AoA and cm to the temporary
+                    # text file.
                     else:
                         tempTxt.write(ReStr+line)
         # now we interpret the txt as a comma separated values (csv) file, but
         # separated with whitespaces instead of commas.
         # We know what the columns are supposed to represent:
         colNames = ['Re', 'AoA', 'Cl', 'Cd', 'Cm']
-        ClCdFrame = pd.read_csv("temp.txt", delim_whitespace=True, names=colNames)
+        ClCdFrame = pd.read_csv("temp.txt", delim_whitespace=True,
+                                names=colNames)
 
         # Multiply the Re by 10^6, as Ashes gives Re in million
         ReList = np.asarray(ClCdFrame["Re"]).astype(float)*1e6
@@ -62,30 +64,45 @@ def importAshesPolars(filename, source):
         AoAList = np.array([])
         ClList = np.array([])
         CdList = np.array([])
-        for file in os.listdir():
-            if file.startswith(filename) and file.endswith('.txt'):
-                lineCount = 0
-                with open(file, 'r') as bladeFile:
-                    lines = bladeFile.readlines()
-                    for line in lines:
-                        if lineCount == 8:
-                            Re = float(''.join(line.split()[5:8]))
-                        elif lineCount > 11:
-                            ReList = np.append(ReList, Re)
-                            AoA, Cl, Cd = line.split()[0:3]
-                            AoAList = np.append(AoAList, float(AoA))
-                            ClList = np.append(AoAList, float(AoA))
-                            CdList = np.append(AoAList, float(AoA))
-                        lineCount += 1
+        # two allowed cases: either all of the files to be imported are
+        # Specified as lists, in that case the entire filename must be
+        # specified, or only the filename without the reynolds number is given.
+        # in that case, the program iterates through the current folder, to
+        # find all .txt files starting with the same name.
+        if type(filename) == list:
+            file_iterator = filename
+        elif type(filename) == str:
+            file_iterator = []
+            for file in os.listdir():
+                if file.startswith(filename) and file.endswith('.txt'):
+                    file_iterator.append(file)
+        # Then we iterate through all the files:
+        for file in file_iterator:
+            lineCount = 0
+            with open(file, 'r') as bladeFile:
+                lines = bladeFile.readlines()
+                for line in lines:
+                    # we know on which line the Reynolds number is given:
+                    if lineCount == 8:
+                        Re = float(''.join(line.split()[5:8]))
+                    # and on which line the actual blade data starts:
+                    elif lineCount > 11:
+                        # all of this is then saved in the lists.
+                        ReList = np.append(ReList, Re)
+                        AoA, Cl, Cd = line.split()[0:3]
+                        AoAList = np.append(AoAList, float(AoA))
+                        ClList = np.append(ClList, float(Cl))
+                        CdList = np.append(CdList, float(Cd))
+                    lineCount += 1
     # Create a list of points with the Parameters, Re and AoA
     points = [(x, y) for (x, y) in zip(ReList, AoAList)]
 
     # Return functions for the lift and drag at different Re and different AoA
     Clfun = LinearNDInterpolator(points, ClList)
     Cdfun = LinearNDInterpolator(points, CdList)
-    # In order to get the optimal angle of attack, we'll have to
-    # do some more tomfoolery
 
+    # In order to get the optimal angle of attack, we'll have to
+    # do some more.
     Aoa = []
     Re = []
     RateOld = -1
@@ -120,5 +137,3 @@ def importAshesPolars(filename, source):
     Relims = [np.min(ReList), np.max(ReList)]
 
     return [Clfun, Cdfun, Relims, AoaMaxFun]
-# If optimizeTheta is set to True, it will optimize as long as the reynolds
-# number does not exceed the largest available one for the airfoil

@@ -4,16 +4,55 @@ Created on Wed Mar 30 14:59:10 2022
 
 @author: jkescher
 """
+###############################################################################
+# function created by Jan-Karl L. Escher for use in the course
+# FENT2321/TEP4175-Design of a wind turbine, at NTNU.
+# INPUT:
+# The function takes two arguments: filename and source.
+#
+# filename: either a string or a list of strings. If the file originates from
+# Ashes, the filename should containt the entire name of the file as Ashes files
+# have data for all Reynolds numbers in the same file. In this case, it should
+# be only one string.
+# If it is for files originating from airfoiltools, there are two cases. If
+# you want to import all files for the same airfoil from one directory, you
+# enter the start of the name of all of the files (so without the number
+# indicating the Reynolds number), and the function will import all text files
+# in the current directory with the same start. If you want to specify a number
+# of files to import, all of these have to be listed completely in a list.
+#
+# The files have to be located in the working directory, so in the folder from
+# which you call the function.
+#
+# source: string that indicates whether the file originates form ashes or from
+# airfoiltools. Should be either 'Airfoiltools' or 'Ashes'.
+#
+# OUTPUT:
+#
+# Clfun: function of type scipy.interpolate.interpnd.LinearNDInterpolator.
+# it takes the Reynolds number and the angle of attack in the range of the
+# interpolated data as arguments, and returns the corresponding Cl-value
+#
+# Cdfun: same as Clfun, but with Cd
+#
+# AoAMaxfun: function which returns the optimal angle of attack at any
+# operating point.
+#
+# Relims: returns the upper and lower limits of the Reynolds number.
+# if you try to interpolate outside of this range, the functions will return
+# errors.
+#
+# AoAlims: same as Relims, but with angle of attack
 
-
-def importAshesPolars(filename, source):
+def importPolars(filename, source):
     # Import all of the relevant python modules
     import os
     import numpy as np
     import pandas as pd
     from scipy.interpolate import LinearNDInterpolator
     from scipy.interpolate import interp1d
-    if source == 'Ashes':
+
+    if source.upper() == 'ASHES':
         # Open the file and read all of its lines.
         with open(filename, "r") as bladefile:
             bladelines = bladefile.readlines()
@@ -56,9 +95,12 @@ def importAshesPolars(filename, source):
         AoAList = np.asarray(ClCdFrame["AoA"]).astype(float)
         ClList = np.asarray(ClCdFrame["Cl"]).astype(float)
         CdList = np.asarray(ClCdFrame["Cd"]).astype(float)
+        AoAlims = [np.min(AoAList), np.max(AoAList)]
     # If the files are imported from airfoiltools, there is one file for each
     # Re-value. We will iterate through all of these, and extract data.
-    elif source == 'Airfoiltools':
+    elif source.upper() == 'AIRFOILTOOLS':
+        AoA_max_list = []
+        AoA_min_list = []
         # initialize all of the arrays
         ReList = np.array([])
         AoAList = np.array([])
@@ -79,6 +121,8 @@ def importAshesPolars(filename, source):
         # Then we iterate through all the files:
         for file in file_iterator:
             lineCount = 0
+            AoA_min = 360
+            AoA_max = -360
             with open(file, 'r') as bladeFile:
                 lines = bladeFile.readlines()
                 for line in lines:
@@ -93,7 +137,18 @@ def importAshesPolars(filename, source):
                         AoAList = np.append(AoAList, float(AoA))
                         ClList = np.append(ClList, float(Cl))
                         CdList = np.append(CdList, float(Cd))
+                        if float(AoA) < AoA_min:
+                            AoA_min = float(AoA)
+                        if float(AoA) > AoA_max:
+                            AoA_max = float(AoA)
+
                     lineCount += 1
+            AoA_min_list.append(AoA_min)
+            AoA_max_list.append(AoA_max)
+        AoAlims = [max(AoA_min_list), min(AoA_max_list)]
+
+    else:
+        raise NameError(f'{source} is not a valid value for source. Use \'ashes\' or \'airfoiltools\' instead')
     # Create a list of points with the Parameters, Re and AoA
     points = [(x, y) for (x, y) in zip(ReList, AoAList)]
 
@@ -136,4 +191,4 @@ def importAshesPolars(filename, source):
     # And the limits for the reynolds number (upper and lower)
     Relims = [np.min(ReList), np.max(ReList)]
 
-    return [Clfun, Cdfun, Relims, AoaMaxFun]
+    return [Clfun, Cdfun, AoaMaxFun, Relims, AoAlims]
